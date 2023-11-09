@@ -99,7 +99,7 @@ const Signup = () => {
     }
 
     alert("Usuário cadatrado com sucesso!");
-    navigate("/");
+    navigate("/signin");
   };
 
   return (
@@ -178,7 +178,7 @@ const Signup = () => {
         <C.LabelSignin>
           Já tem uma conta?
           <C.Strong>
-            <Link to="/">&nbsp;Entre</Link>
+            <Link to="/signin">&nbsp;Entre</Link>
           </C.Strong>
         </C.LabelSignin>
       </C.Content>
