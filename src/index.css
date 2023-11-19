@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.wrapper {
+    @apply max-w-[1368] px-8 mx-auto;
+}
+
+.link {
+    @apply text-light-gray font-raleway border-b-2 hover:border-primary-blue transition-all duration-150 ease-in cursor-pointer;
+}

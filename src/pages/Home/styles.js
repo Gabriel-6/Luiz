@@ -13,15 +13,6 @@ export const Menu = styled.div`
 
 `;
 
-export const Logo = styled.div`
-  margin-right: auto;
-  img {
-    max-height: 100px;
-    height: 65px;
-    width: 65px;
-    display: block;
-  }
-`;
 
 export const CustomInput = styled.input`
   padding: 8px;
