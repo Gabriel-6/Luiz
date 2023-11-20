@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navigations from "../../components/Navigation";
 import { useParams } from 'react-router-dom';
 import { locals } from "../../components/Local"
@@ -11,14 +11,24 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { addDays, differenceInDays } from 'date-fns';
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/index.css"
+import Button from '../../components/Button';
 
 export const PetsSpace = () => {
   const currentDate = new Date();
   const [checkInDate, setCheckInDate] = useState(currentDate);
   const [checkOutDate, setCheckOutDate] = useState(addDays(currentDate, 3));
   const { id } = useParams();
-  
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const userToken = localStorage.getItem('user_token');
+    if (userToken) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   const hotel = locals.find((hotel) => {
     return hotel.id === parseInt(id)
@@ -27,8 +37,33 @@ export const PetsSpace = () => {
   const passDays = differenceInDays(checkOutDate, checkInDate);
 
   const dayPrice = () => {
-    return (hotel.price * passDays)
+    return (hotel.price * passDays).toFixed(2);
+  }
 
+  const tax = () => {
+    const value = ((15 / parseInt(hotel.price)) * 100);
+    return (value * passDays).toFixed(2);
+  }
+
+  const finalValue = () => {
+    return (parseFloat(dayPrice()) + parseFloat(tax())).toFixed(2)
+  }
+
+  const finalSell = (localName, initDate, finalDate, value) => {
+    const userToken = localStorage.getItem('user_token')
+    const token = JSON.parse(userToken)
+    const id = token.id
+    const values = {
+      "localName": localName,
+      "initDate": initDate,
+      "finalDate": finalDate,
+      "value": value,
+      "id": id
+    }
+    const newValue = JSON.stringify(values)
+    localStorage.setItem('accommodation', newValue)
+
+    alert("Hospedagem realizada com sucesso")
   }
 
   const renderDescription = () => {
@@ -77,19 +112,41 @@ export const PetsSpace = () => {
               <div className='font-sans mt-10'>{renderDescription()}</div>
             </div>
           </div>
-          <div className='flex-1 bg-white w-full rounded mb-8'>
+          <div className='flex-1 bg-white w-4/5 lg:w-2/3 rounded mb-8 p-4'>
             <div className='flex justify-center b mx-auto mb-5 mt-5'>
               <div className='mr-4'>
                 <ReactDatePicker className='border border-gray-300 focus:border-blue-500 text-center outline-none rounded w-full px-4 h-14 font-sans ' locale={ptBR} selected={checkInDate} onChange={setCheckInDate} dateFormat="dd/MM/yyyy" minDate={currentDate} placeholderText='CheckIn' />
-
               </div>
               <div className=''>
-                <ReactDatePicker className='border border-gray-300 focus:border-blue-500 text-center outline-none rounded w-full px-4 h-14 font-sans' locale={ptBR} selected={checkOutDate} onChange={setCheckOutDate} dateFormat="dd/MM/yyyy" minDate={currentDate} placeholderText='CheckOut'/>
+                <ReactDatePicker className='border border-gray-300 focus:border-blue-500 text-center outline-none rounded w-full px-4 h-14 font-sans' locale={ptBR} selected={checkOutDate} onChange={setCheckOutDate} dateFormat="dd/MM/yyyy" minDate={addDays(checkInDate, 2)} placeholderText='CheckOut' />
               </div>
             </div>
+
             <div className='flex justify-center'>
-              <div>R${hotel.price} x {passDays} dias </div>
-              <div>R${dayPrice()}</div>
+              <div className='w-full'>
+                <div className="flex justify-between mt-3 border-b border-gray-300 pb-2">
+                  <div>R${hotel.price} x {passDays} dias </div>
+                  <div>R${dayPrice()}</div>
+                </div>
+                <div className="flex justify-between mt-3 border-b border-gray-300 pb-2">
+                  <div>Taxa de Serviço</div>
+                  <div>R${tax()}</div>
+                </div>
+              </div>
+            </div>
+            <div className='flex justify-between mt-3'>
+              <div>Total</div>
+              <div>R${finalValue()}</div>
+            </div>
+            <div className='flex items-center justify-center mt-6'>
+              {isLoggedIn ? (
+                <Button
+                  Text="Continuar"
+                  onClick={() => {finalSell(hotel.name, checkInDate, checkOutDate, finalValue())}}
+                />
+              ) : (
+                <div>Você precisa estar logado para continuar.</div>
+              )}
             </div>
           </div>
         </div>
