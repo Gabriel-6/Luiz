@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Home from "../pages/Home"
 import Signin from "../pages/Signin"
 import Signup from "../pages/Signup"
+import PetSpace from "../pages/PetsSpace"
 
 const RoutesApp = () => {
     return (
@@ -12,6 +13,7 @@ const RoutesApp = () => {
                     <Route exact path="/home" element={<Home />} />
                     <Route exact path="/signup" element={<Signup />} />
                     <Route exact path="/signin" element={<Signin />} />
+                    <Route path="/petspaces/:id" element={<PetSpace />} />
                     <Route path="*" element={<Home />} />
                 </Routes>
             </Fragment>

@@ -3,6 +3,7 @@ import GlobalStyle from './styles/global'
 import RoutesApp from './rotas'
 import { AuthProvider } from './context/auth'
 
+
 const App = () => {
   return (
     <AuthProvider>
