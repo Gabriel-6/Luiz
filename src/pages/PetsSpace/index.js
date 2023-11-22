@@ -12,6 +12,8 @@ import { addDays, differenceInDays } from 'date-fns';
 import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/index.css"
 import Button from '../../components/Button';
+import { CiLocationOn } from "react-icons/ci";
+import FeedbackForm from '../../components/Feedback';
 
 export const PetsSpace = () => {
   const currentDate = new Date();
@@ -41,7 +43,7 @@ export const PetsSpace = () => {
   }
 
   const tax = () => {
-    const value = ((15 / parseInt(hotel.price)) * 100);
+    const value = ((15 / 100) * parseFloat(hotel.price));
     return (value * passDays).toFixed(2);
   }
 
@@ -85,7 +87,10 @@ export const PetsSpace = () => {
         <div className='flex flex-col lg:flex-row lg:items-center lg:justify-between'>
           <div>
             <h2 className='text-2xl font-semibold font-sans'>{hotel.name}</h2>
-            <h3 className='text-lg mb-5 font-normal font-sans'>{hotel.local}</h3>
+            <div className='flex'>
+              <CiLocationOn className='text-2xl'/>
+              <h3 className='text-lg mb-5 font-normal font-sans'>{hotel.local}</h3>
+            </div>
           </div>
           <div className='mb-4 lg:mb-0 flex gap-x-2 text-sm'>
             <div className='bg-blue-500 text-white capitalize px-3 rounded-full font-sans'>{hotel.type}</div>
@@ -150,6 +155,11 @@ export const PetsSpace = () => {
             </div>
           </div>
         </div>
+        {isLoggedIn ? (
+                <FeedbackForm />
+              ) : (
+                <div></div>
+              )}
       </div>
     </section>
   )
